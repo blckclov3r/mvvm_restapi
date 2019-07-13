@@ -20,13 +20,17 @@ import androidx.recyclerview.widget.RecyclerView;
 public class RecipeRecyclerAdapter extends RecyclerView.Adapter<RecipeRecyclerAdapter.ViewHolder>{
 
     private List<Recipe> mRecipes = new ArrayList<>();
+    private OnRecipeListener mListener;
 
+    public RecipeRecyclerAdapter(OnRecipeListener mListener) {
+        this.mListener = mListener;
+    }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_recipe_list_item,parent,false);
-       return new ViewHolder(view);
+       return new ViewHolder(view,mListener);
     }
 
     @Override
@@ -61,17 +65,34 @@ public class RecipeRecyclerAdapter extends RecyclerView.Adapter<RecipeRecyclerAd
         notifyDataSetChanged();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView title,publisher,socialScore;
         private ImageView image;
-        public ViewHolder(@NonNull View itemView) {
+
+        OnRecipeListener listener;
+
+        public ViewHolder(@NonNull View itemView,OnRecipeListener listener) {
             super(itemView);
+            this.listener = listener;
             title = itemView.findViewById(R.id.recipe_title);
             publisher = itemView.findViewById(R.id.recipe_publisher);
             socialScore = itemView.findViewById(R.id.recipe_social_score);
             image = itemView.findViewById(R.id.recipe_image);
+            itemView.setOnClickListener(this);
 
         }
+
+        @Override
+        public void onClick(View v) {
+            if(listener!= null){
+                int position = getAdapterPosition();
+                listener.onRecipeClick(position);
+            }
+        }
+    }
+
+    public interface OnRecipeListener{
+        void onRecipeClick(int position);
     }
 
 }

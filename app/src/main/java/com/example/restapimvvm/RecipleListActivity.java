@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.example.restapimvvm.adapters.RecipeRecyclerAdapter;
@@ -15,7 +16,7 @@ import com.example.restapimvvm.viewmodels.RecipeListViewModel;
 import java.util.List;
 
 
-public class RecipleListActivity extends BaseActivity {
+public class RecipleListActivity extends BaseActivity implements RecipeRecyclerAdapter.OnRecipeListener {
 
     private static final String TAG = "RecipleListActivity";
     private static final String COMMON_TAG = "mAppLog";
@@ -39,7 +40,7 @@ public class RecipleListActivity extends BaseActivity {
     }
 
     private void initRecyclerView(){
-        mAdapter = new RecipeRecyclerAdapter();
+        mAdapter = new RecipeRecyclerAdapter(this);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(mAdapter);
     }
@@ -54,4 +55,8 @@ public class RecipleListActivity extends BaseActivity {
     }
 
 
+    @Override
+    public void onRecipeClick(int position) {
+        Log.d(COMMON_TAG,TAG+" click: "+position);
+    }
 }
