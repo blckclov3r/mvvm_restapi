@@ -2,10 +2,13 @@ package com.example.restapimvvm;
 
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.widget.TextView;
 
+import com.example.restapimvvm.adapters.RecipeRecyclerAdapter;
 import com.example.restapimvvm.models.Recipe;
 import com.example.restapimvvm.viewmodels.RecipeListViewModel;
 
@@ -18,28 +21,34 @@ public class RecipleListActivity extends BaseActivity {
     private static final String COMMON_TAG = "mAppLog";
 
     private RecipeListViewModel mRecipeListViewModel;
-    TextView mTest;
+
+    private RecyclerView mRecyclerView;
+    private RecipeRecyclerAdapter mAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_list);
-        mTest = findViewById(R.id.test);
+        mRecyclerView = findViewById(R.id.recipe_list);
 
         mRecipeListViewModel = ViewModelProviders.of(this).get(RecipeListViewModel.class);
+
+        initRecyclerView();
         subscribeObservers();
         mRecipeListViewModel.search("barbecue",1);
-
     }
 
-    private void subscribeObservers() {
+    private void initRecyclerView(){
+        mAdapter = new RecipeRecyclerAdapter();
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setAdapter(mAdapter);
+    }
+
+    private void subscribeObservers(){
         mRecipeListViewModel.getRecipes().observe(this, new Observer<List<Recipe>>() {
             @Override
             public void onChanged(List<Recipe> recipes) {
-                StringBuilder sb = new StringBuilder();
-                for(Recipe recipe : recipes){
-                    sb.append(recipe.getTitle()+"\n");
-                }
-                mTest.setText(sb.toString());
+                mAdapter.setRecipes(recipes);
             }
         });
     }
