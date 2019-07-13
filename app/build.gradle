@@ -49,4 +49,7 @@ dependencies {
     // Material design for recyclerview
     def material_version = "1.0.0"
     implementation "com.google.android.material:material:$material_version"
+
+    /// CircleImageView
+    implementation 'de.hdodenhof:circleimageview:3.0.0'
 }

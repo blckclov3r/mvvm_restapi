@@ -16,11 +16,11 @@ public interface RecipeApi {
             @Query("page") String page
     );
 
-    @GET("api/get")
-    Call<RecipeResponse> getRecipe(
-            @Query("key") String key,
-            @Query("rId") String recipeId
-    );
+//    @GET("api/get")
+//    Call<RecipeResponse> getRecipe(
+//            @Query("key") String key,
+//            @Query("rId") String recipeId
+//    );
 
 
 }

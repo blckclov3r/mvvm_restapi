@@ -1,5 +1,6 @@
 package com.example.restapimvvm;
 
+import androidx.appcompat.widget.SearchView;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -7,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.TextView;
 
 import com.example.restapimvvm.adapters.RecipeRecyclerAdapter;
 import com.example.restapimvvm.models.Recipe;
@@ -30,13 +30,16 @@ public class RecipleListActivity extends BaseActivity implements RecipeRecyclerA
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_list);
+        Log.d(COMMON_TAG,TAG+" onCreate");
         mRecyclerView = findViewById(R.id.recipe_list);
 
         mRecipeListViewModel = ViewModelProviders.of(this).get(RecipeListViewModel.class);
 
         initRecyclerView();
         subscribeObservers();
-        mRecipeListViewModel.search("barbecue",1);
+        initSearchView();
+        mRecipeListViewModel.displaySearchCategories();
+
     }
 
     private void initRecyclerView(){
@@ -54,9 +57,30 @@ public class RecipleListActivity extends BaseActivity implements RecipeRecyclerA
         });
     }
 
+    private void initSearchView(){
+        SearchView searchView = findViewById(R.id.searchView);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Log.d(COMMON_TAG,TAG+" onQueryTextSubmit: "+query);
+                mRecipeListViewModel.search(query,0);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+    }
 
     @Override
     public void onRecipeClick(int position) {
         Log.d(COMMON_TAG,TAG+" click: "+position);
+    }
+
+    @Override
+    public void onCategoryClick(String category) {
+        Log.d(COMMON_TAG,TAG+" click: "+category);
     }
 }
