@@ -6,12 +6,14 @@ import android.util.Log;
 import com.example.restapimvvm.MyApplication;
 import com.example.restapimvvm.models.Recipe;
 import com.example.restapimvvm.requests.RecipeApi;
+import com.example.restapimvvm.requests.responses.RecipeResponse;
 import com.example.restapimvvm.requests.responses.RecipeSearchResponse;
 import com.example.restapimvvm.util.Constants;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -71,9 +73,10 @@ public class RecipeRepository implements RequestCancelListener{
         @Override
         public void onResponse(Call<RecipeSearchResponse> call, Response<RecipeSearchResponse> response) {
             if(response.code() == 200){
-                List<Recipe> recipes = new ArrayList<>(response.body().getRecipes());
-                Log.d(COMMON_TAG,TAG+" onResponse: "+response.body().toString());
 
+                List<Recipe> recipes = Objects.requireNonNull(response.body()).getRecipes();
+
+                Log.d(COMMON_TAG,TAG+" recipeListSearchCallback onResponse: "+response.body().getRecipes().toString());
                 //set results to mRecipes list
                 try{
                     if(mPageNumber == 0){

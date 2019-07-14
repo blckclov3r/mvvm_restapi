@@ -3,19 +3,41 @@ package com.example.restapimvvm.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import java.util.Arrays;
+import java.util.List;
 
 public class Recipe implements Parcelable {
+
+    @Expose
+    @SerializedName("title")
     private String title;
+
+    @Expose
+    @SerializedName("publisher")
     private String publisher;
-    private String[] ingredients;
+
+    @Expose
+    @SerializedName("ingredients")
+    private List<String> ingredients;
+
+    @Expose
+    @SerializedName("recipe_id")
     private String recipeId;
+
+    @Expose
+    @SerializedName("image_url")
     private String image_url;
+
+    @Expose
+    @SerializedName("social_rank")
     private float social_rank;
 
     public Recipe(){}
 
-    public Recipe(String title, String publisher, String[] ingredients, String recipeId, String image_url, float social_rank) {
+    public Recipe(String title, String publisher, List<String> ingredients, String recipeId, String image_url, float social_rank) {
         this.title = title;
         this.publisher = publisher;
         this.ingredients = ingredients;
@@ -24,10 +46,11 @@ public class Recipe implements Parcelable {
         this.social_rank = social_rank;
     }
 
+
     protected Recipe(Parcel in) {
         title = in.readString();
         publisher = in.readString();
-        ingredients = in.createStringArray();
+        ingredients = in.createStringArrayList();
         recipeId = in.readString();
         image_url = in.readString();
         social_rank = in.readFloat();
@@ -37,7 +60,7 @@ public class Recipe implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(title);
         dest.writeString(publisher);
-        dest.writeStringArray(ingredients);
+        dest.writeStringList(ingredients);
         dest.writeString(recipeId);
         dest.writeString(image_url);
         dest.writeFloat(social_rank);
@@ -76,11 +99,11 @@ public class Recipe implements Parcelable {
         this.publisher = publisher;
     }
 
-    public String[] getIngredients() {
+    public List<String> getIngredients() {
         return ingredients;
     }
 
-    public void setIngredients(String[] ingredients) {
+    public void setIngredients(List<String> ingredients) {
         this.ingredients = ingredients;
     }
 
@@ -113,7 +136,7 @@ public class Recipe implements Parcelable {
         return "Recipe{" +
                 "title='" + title + '\'' +
                 ", publisher='" + publisher + '\'' +
-                ", ingredients=" + Arrays.toString(ingredients) +
+                ", ingredients=" + ingredients +
                 ", recipeId='" + recipeId + '\'' +
                 ", image_url='" + image_url + '\'' +
                 ", social_rank=" + social_rank +
