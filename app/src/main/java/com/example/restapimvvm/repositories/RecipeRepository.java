@@ -24,7 +24,6 @@ public class RecipeRepository implements RequestCancelListener{
     private static final String TAG = "RecipeRepository";
     private static final String COMMON_TAG = "mAppLog";
 
-
     private static RecipeRepository instance = null;
 
     private RecipeApi mRecipeApi;
@@ -72,13 +71,11 @@ public class RecipeRepository implements RequestCancelListener{
     private Callback<RecipeSearchResponse> recipeListSearchCallback = new Callback<RecipeSearchResponse>() {
         @Override
         public void onResponse(Call<RecipeSearchResponse> call, Response<RecipeSearchResponse> response) {
-            if(response.code() == 200){
-
-                List<Recipe> recipes = Objects.requireNonNull(response.body()).getRecipes();
-
-                Log.d(COMMON_TAG,TAG+" recipeListSearchCallback onResponse: "+response.body().getRecipes().toString());
+            if(response.code() == 200 && response.body() != null){
                 //set results to mRecipes list
                 try{
+                    Log.d(COMMON_TAG,TAG+" recipeListSearchCallback onResponse: "+response.body().getRecipes().toString());
+                    List<Recipe> recipes = Objects.requireNonNull(response.body()).getRecipes();
                     if(mPageNumber == 0){
                         mRecipeListCallback.setRecipes(recipes);
                     }else{

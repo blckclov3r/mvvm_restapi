@@ -18,7 +18,7 @@ import com.example.restapimvvm.requests.RecipeApi;
 import com.example.restapimvvm.requests.responses.RecipeResponse;
 import com.example.restapimvvm.util.Constants;
 
-public class RecipeActivity extends AppCompatActivity {
+public class RecipeActivity extends BaseActivity {
 
     private ImageView mRecipeImage;
     private TextView mRecipeTitle,mRecipeRank,mRecipeIngredients;
@@ -36,7 +36,7 @@ public class RecipeActivity extends AppCompatActivity {
         mRecipeRank = findViewById(R.id.recipe_social_score);
         mRecipeIngredients = findViewById(R.id.recipe_ingredients);
 
-
+        showProgressBar(true);
         if(getIntent().hasExtra("recipe")){
 
             Recipe recipe = getIntent().getParcelableExtra("recipe");
@@ -47,12 +47,17 @@ public class RecipeActivity extends AppCompatActivity {
             responseCall.enqueue(new Callback<RecipeResponse>() {
                 @Override
                 public void onResponse(Call<RecipeResponse> call, Response<RecipeResponse> response) {
-                    if(response.code() == 200) {
-                        Log.d(COMMON_TAG, TAG + " response: " + response.body().getRecipe());
-                        mRecipeIngredients.setText(String.valueOf(response.body().getRecipe().getIngredients()));
-                    }else{
-                        Log.d(COMMON_TAG,TAG+" response code: "+response.code());
+                    try {
+                        if (response.code() == 200 && response.body() != null) {
+                            Log.d(COMMON_TAG, TAG + " response: " + response.body().getRecipe());
+                            mRecipeIngredients.setText(String.valueOf(response.body().getRecipe().getIngredients()));
+                        } else {
+                            Log.d(COMMON_TAG, TAG + " response code: " + response.code());
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
                     }
+                    showProgressBar(false);
                 }
 
                 @Override
@@ -73,6 +78,7 @@ public class RecipeActivity extends AppCompatActivity {
 
             mRecipeTitle.setText(recipe.getTitle());
             mRecipeRank.setText(String.valueOf(recipe.getSocial_rank()));
+
         }
     }
 }
