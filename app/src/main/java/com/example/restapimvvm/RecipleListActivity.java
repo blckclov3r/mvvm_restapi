@@ -30,7 +30,7 @@ public class RecipleListActivity extends BaseActivity implements RecipeRecyclerA
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_list);
-        Log.d(COMMON_TAG,TAG+" onCreate");
+        Log.d(COMMON_TAG, TAG + " onCreate");
         mRecyclerView = findViewById(R.id.recipe_list);
 
         mRecipeListViewModel = ViewModelProviders.of(this).get(RecipeListViewModel.class);
@@ -42,13 +42,13 @@ public class RecipleListActivity extends BaseActivity implements RecipeRecyclerA
 
     }
 
-    private void initRecyclerView(){
+    private void initRecyclerView() {
         mAdapter = new RecipeRecyclerAdapter(this);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(mAdapter);
     }
 
-    private void subscribeObservers(){
+    private void subscribeObservers() {
         mRecipeListViewModel.getRecipes().observe(this, new Observer<List<Recipe>>() {
             @Override
             public void onChanged(List<Recipe> recipes) {
@@ -57,15 +57,15 @@ public class RecipleListActivity extends BaseActivity implements RecipeRecyclerA
         });
     }
 
-    private void initSearchView(){
+    private void initSearchView() {
         SearchView searchView = findViewById(R.id.searchView);
         searchView.isIconfiedByDefault();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Log.d(COMMON_TAG,TAG+" onQueryTextSubmit: "+query);
+                Log.d(COMMON_TAG, TAG + " onQueryTextSubmit: " + query);
                 mRecipeListViewModel.setIsViewingRecipes(true);
-                mRecipeListViewModel.search(query,0);
+                mRecipeListViewModel.search(query, 0);
                 return false;
             }
 
@@ -78,25 +78,28 @@ public class RecipleListActivity extends BaseActivity implements RecipeRecyclerA
 
     @Override
     public void onRecipeClick(int position) {
-        Log.d(COMMON_TAG,TAG+" click: "+position);
+        Log.d(COMMON_TAG, TAG + " click: " + position);
     }
 
     @Override
     public void onCategoryClick(String category) {
-        Log.d(COMMON_TAG,TAG+" click: "+category);
+        Log.d(COMMON_TAG, TAG + " click: " + category);
         mRecipeListViewModel.setIsViewingRecipes(true);
-        mRecipeListViewModel.search(category,0);
+        mRecipeListViewModel.search(category, 0);
     }
 
     @Override
     public void onBackPressed() {
-        if(mRecipeListViewModel.isIsViewingRecipes()){
+        Log.d(COMMON_TAG, TAG + " onBackpress, called");
+        if (mRecipeListViewModel.getPerformingQuery()) {
+            mRecipeListViewModel.cancelQuery();
             mRecipeListViewModel.displaySearchCategories();
-            mRecipeListViewModel.setIsViewingRecipes(false);
-        }else {
-//            super.onBackPressed();
-            mRecipeListViewModel.displaySearchCategories();
-        }
 
+        } else if (mRecipeListViewModel.isIsViewingRecipes()) {
+            mRecipeListViewModel.displaySearchCategories();
+        } else {
+            super.onBackPressed();
+        }
     }
+
 }

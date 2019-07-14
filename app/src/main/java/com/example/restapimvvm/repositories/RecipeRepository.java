@@ -17,7 +17,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class RecipeRepository {
+public class RecipeRepository implements RequestCancelListener{
 
     private static final String TAG = "RecipeRepository";
     private static final String COMMON_TAG = "mAppLog";
@@ -27,6 +27,9 @@ public class RecipeRepository {
 
     private RecipeApi mRecipeApi;
     private RecipeListCallback mRecipeListCallback;
+
+    //Calls
+    private Call<RecipeSearchResponse> mRecipeSearchCall = null;
 
     public  static RecipeRepository getInstance(Application application){
         if(instance == null){
@@ -49,8 +52,9 @@ public class RecipeRepository {
     }
 
     public void searchApi(String query, int pageNumber){
-        Call<RecipeSearchResponse> responseCall = mRecipeApi.searchRecipe(Constants.API_KEY,query,String.valueOf(pageNumber));
-        responseCall.enqueue(recipeListSearchCallback);
+        mRecipeListCallback.onQueryStart();
+        mRecipeSearchCall = mRecipeApi.searchRecipe(Constants.API_KEY,query,String.valueOf(pageNumber));
+        mRecipeSearchCall.enqueue(recipeListSearchCallback);
     }
 
     private Callback<RecipeSearchResponse> recipeListSearchCallback = new Callback<RecipeSearchResponse>() {
@@ -70,11 +74,22 @@ public class RecipeRepository {
                     e.printStackTrace();
                 }
             }
+            mRecipeListCallback.onQueryDone();
         }
 
         @Override
         public void onFailure(Call<RecipeSearchResponse> call, Throwable t) {
             Log.d(COMMON_TAG,TAG+" onFailure: "+t.getMessage());
+            mRecipeListCallback.onQueryDone();
         }
     };
+
+    @Override
+    public void onCancel() {
+        if(mRecipeSearchCall != null){
+            mRecipeSearchCall.cancel();
+            mRecipeListCallback.onQueryDone();
+            mRecipeSearchCall = null;
+        }
+    }
 }

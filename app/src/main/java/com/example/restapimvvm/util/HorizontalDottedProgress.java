@@ -24,7 +24,7 @@ public class HorizontalDottedProgress extends View {
     private int mBounceDotRadius = 8;
 
     //to get identified in which position dot has to bounce
-    private int  mDotPosition;
+    private int mDotPosition;
 
     //specify how many dots you need in a progressbar
     private int mDotAmount = 10;
@@ -52,7 +52,7 @@ public class HorizontalDottedProgress extends View {
         paint.setColor(getResources().getColor(R.color.colorAccent));
 
         //function to create dot
-        createDot(canvas,paint);
+        createDot(canvas, paint);
     }
 
     @Override
@@ -65,11 +65,11 @@ public class HorizontalDottedProgress extends View {
     private void createDot(Canvas canvas, Paint paint) {
 
         //here i have setted progress bar with 10 dots , so repeat and wnen i = mDotPosition  then increase the radius of dot i.e mBounceDotRadius
-        for(int i = 0; i < mDotAmount; i++ ){
-            if(i == mDotPosition){
-                canvas.drawCircle(10+(i*20), mBounceDotRadius, mBounceDotRadius, paint);
-            }else {
-                canvas.drawCircle(10+(i*20), mBounceDotRadius, mDotRadius, paint);
+        for (int i = 0; i < mDotAmount; i++) {
+            if (i == mDotPosition) {
+                canvas.drawCircle(10 + (i * 20), mBounceDotRadius, mBounceDotRadius, paint);
+            } else {
+                canvas.drawCircle(10 + (i * 20), mBounceDotRadius, mDotRadius, paint);
             }
         }
 
@@ -83,11 +83,10 @@ public class HorizontalDottedProgress extends View {
         int height;
 
         //calculate the view width
-        int calculatedWidth = (20*9);
+        int calculatedWidth = (20 * 9);
 
         width = calculatedWidth;
-        height = (mBounceDotRadius*2);
-
+        height = (mBounceDotRadius * 2);
 
 
         //MUST CALL THIS
@@ -117,7 +116,7 @@ public class HorizontalDottedProgress extends View {
                 if (mDotPosition == mDotAmount) {
                     mDotPosition = 0;
                 }
-                Log.d(COMMON_TAG,TAG+"  ####On Animation Repeat###");
+                Log.d(COMMON_TAG, TAG + "  ####On Animation Repeat###");
 
             }
         });

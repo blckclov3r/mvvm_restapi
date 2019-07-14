@@ -18,11 +18,32 @@ public class RecipeListViewModel extends AndroidViewModel implements RecipeListC
     private RecipeRepository mRecipeRepository;
     private MutableLiveData<List<Recipe>> mRecipes = new MutableLiveData<>();
     private boolean mIsViewingRecipes = false;
+    private boolean mIsPerformingQuery = false;
 
     public RecipeListViewModel(@NonNull Application application) {
         super(application);
         mRecipeRepository = RecipeRepository.getInstance(application);
         mRecipeRepository.setRecipeListCallback(this);
+    }
+
+
+    public void cancelQuery(){
+        mRecipeRepository.onCancel();
+    }
+
+    @Override
+    public void onQueryStart() {
+        mIsPerformingQuery = true;
+    }
+
+    @Override
+    public void onQueryDone() {
+        mIsPerformingQuery = false;
+    }
+
+
+    public boolean getPerformingQuery() {
+        return mIsPerformingQuery;
     }
 
     public boolean isIsViewingRecipes() {
@@ -42,6 +63,7 @@ public class RecipeListViewModel extends AndroidViewModel implements RecipeListC
     }
 
     public void displaySearchCategories(){
+        mIsViewingRecipes = false;
         List<Recipe> categories = new ArrayList<>();
         for(int i=0;i< Constants.DEFAULT_SEARCH_CATEGORIES.length;i++){
             Recipe recipe = new Recipe();
@@ -61,6 +83,7 @@ public class RecipeListViewModel extends AndroidViewModel implements RecipeListC
     public void setRecipes(List<Recipe> recipes) {
         mRecipes.setValue(recipes);
     }
+
 
     public void search(String query,int pageNumber){
         displayLoadingScreen();
