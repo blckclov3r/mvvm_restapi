@@ -15,7 +15,11 @@
         android:theme="@style/AppTheme"
         android:networkSecurityConfig="@xml/network_security_config"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".RecipleListActivity">
+        <activity android:name=".RecipleListActivity"
+            android:hardwareAccelerated="true"
+            android:launchMode="singleTask"
+            android:configChanges="keyboardHidden"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

@@ -59,10 +59,12 @@ public class RecipleListActivity extends BaseActivity implements RecipeRecyclerA
 
     private void initSearchView(){
         SearchView searchView = findViewById(R.id.searchView);
+        searchView.isIconfiedByDefault();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 Log.d(COMMON_TAG,TAG+" onQueryTextSubmit: "+query);
+                mRecipeListViewModel.setIsViewingRecipes(true);
                 mRecipeListViewModel.search(query,0);
                 return false;
             }
@@ -82,5 +84,19 @@ public class RecipleListActivity extends BaseActivity implements RecipeRecyclerA
     @Override
     public void onCategoryClick(String category) {
         Log.d(COMMON_TAG,TAG+" click: "+category);
+        mRecipeListViewModel.setIsViewingRecipes(true);
+        mRecipeListViewModel.search(category,0);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(mRecipeListViewModel.isIsViewingRecipes()){
+            mRecipeListViewModel.displaySearchCategories();
+            mRecipeListViewModel.setIsViewingRecipes(false);
+        }else {
+//            super.onBackPressed();
+            mRecipeListViewModel.displaySearchCategories();
+        }
+
     }
 }

@@ -17,12 +17,28 @@ public class RecipeListViewModel extends AndroidViewModel implements RecipeListC
 
     private RecipeRepository mRecipeRepository;
     private MutableLiveData<List<Recipe>> mRecipes = new MutableLiveData<>();
-
+    private boolean mIsViewingRecipes = false;
 
     public RecipeListViewModel(@NonNull Application application) {
         super(application);
         mRecipeRepository = RecipeRepository.getInstance(application);
         mRecipeRepository.setRecipeListCallback(this);
+    }
+
+    public boolean isIsViewingRecipes() {
+        return mIsViewingRecipes;
+    }
+
+    public void setIsViewingRecipes(boolean mIsViewingRecipes) {
+        this.mIsViewingRecipes = mIsViewingRecipes;
+    }
+
+    private void displayLoadingScreen(){
+        Recipe recipe = new Recipe();
+        recipe.setTitle("LOADING...");
+        List<Recipe> loadingList = new ArrayList<>();
+        loadingList.add(recipe);
+        mRecipes.setValue(loadingList);
     }
 
     public void displaySearchCategories(){
@@ -37,9 +53,6 @@ public class RecipeListViewModel extends AndroidViewModel implements RecipeListC
         mRecipes.setValue(categories);
     }
 
-
-
-
     public MutableLiveData<List<Recipe>> getRecipes() {
         return mRecipes;
     }
@@ -50,6 +63,7 @@ public class RecipeListViewModel extends AndroidViewModel implements RecipeListC
     }
 
     public void search(String query,int pageNumber){
+        displayLoadingScreen();
         mRecipeRepository.searchApi(query,pageNumber);
     }
 }

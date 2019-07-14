@@ -95,6 +95,7 @@ public class RecipeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     public int getItemViewType(int position) {
         Recipe recipe = mRecipes.get(position);
         if(recipe.getSocial_rank() == -1){
+
             return CATEGORY_TYPE;
         }else if(recipe.getTitle().equals("LOADING...")){
             return LOADING_TYPE;
