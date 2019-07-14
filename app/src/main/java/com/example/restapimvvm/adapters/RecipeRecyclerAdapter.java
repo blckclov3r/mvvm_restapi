@@ -31,10 +31,6 @@ public class RecipeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         this.mListener = mListener;
     }
 
-
-
-
-
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -95,11 +91,13 @@ public class RecipeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     public int getItemViewType(int position) {
         Recipe recipe = mRecipes.get(position);
         if(recipe.getSocial_rank() == -1){
-
             return CATEGORY_TYPE;
         }else if(recipe.getTitle().equals("LOADING...")){
             return LOADING_TYPE;
-        }else{
+        }else if(position == mRecipes.size() -1 && position != 0){
+            return LOADING_TYPE;
+        }
+        else{
             return RECIPE_TYPE;
         }
     }
@@ -119,65 +117,19 @@ public class RecipeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     }
 
 
-    // search categories
-    public class CategoryViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private CircleImageView categoryImage;
-        private TextView categoryTitle;
-        private OnRecipeListener listener;
-        public CategoryViewHolder(@NonNull View itemView,OnRecipeListener listener) {
-            super(itemView);
-            this.listener = listener;
-            categoryImage = itemView.findViewById(R.id.category_image);
-            categoryTitle = itemView.findViewById(R.id.category_title);
-            itemView.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View v) {
-            if(listener != null){
-                listener.onCategoryClick(categoryTitle.getText().toString());
-            }
-        }
-    }
-
-    //loadingview
-    public class LoadingViewHolder extends RecyclerView.ViewHolder{
-
-        public LoadingViewHolder(@NonNull View itemView) {
-            super(itemView);
-        }
-    }
-
-    // ViewHolder for RecipeListItem
-    public class RecipeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private TextView title,publisher,socialScore;
-        private ImageView image;
-
-        OnRecipeListener listener;
-
-        public RecipeViewHolder(@NonNull View itemView,OnRecipeListener listener) {
-            super(itemView);
-            this.listener = listener;
-            title = itemView.findViewById(R.id.recipe_title);
-            publisher = itemView.findViewById(R.id.recipe_publisher);
-            socialScore = itemView.findViewById(R.id.recipe_social_score);
-            image = itemView.findViewById(R.id.recipe_image);
-            itemView.setOnClickListener(this);
-
-        }
-
-        @Override
-        public void onClick(View v) {
-            if(listener!= null){
-                int position = getAdapterPosition();
-                listener.onRecipeClick(position);
-            }
-        }
-    }
 
     public interface OnRecipeListener{
         void onRecipeClick(int position);
         void onCategoryClick(String category);
+    }
+
+    public Recipe getSelectedRecipe(int position){
+        if(mRecipes != null){
+            if(mRecipes.size() > 0){
+                return mRecipes.get(position);
+            }
+        }
+        return null;
     }
 
 }

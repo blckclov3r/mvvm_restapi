@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="7dp"
+    android:layout_marginEnd="7dp"
+    android:layout_marginStart="7dp"
+    tools:context=".RecipeActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/recipe_image"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_launcher_background"
+                android:layout_width="match_parent"
+                android:layout_height="250dp" />
+
+
+            <TextView
+                tools:text="Recipe title"
+                android:id="@+id/recipe_title"
+                android:layout_marginTop="4dp"
+                android:layout_marginStart="7dp"
+                android:textSize="20sp"
+                android:fontFamily="sans-serif-light"
+                android:textColor="#000"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp"
+                android:paddingBottom="7dp"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/ingredients_title"
+                    android:text="Ingredients"
+                    android:textColor="#000"
+                    android:textSize="16sp"
+                    android:gravity="start"
+                    android:fontFamily="sans-serif"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+
+                <TextView
+                    android:id="@+id/recipe_social_score"
+                    android:layout_width="match_parent"
+                    tools:text="social score"
+                    android:gravity="end"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_marginTop="7dp"
+                android:orientation="vertical"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    tools:text="ingredients"
+                    android:id="@+id/recipe_ingredients"
+                    android:textColor="#000"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+
+    </ScrollView>
+
+</RelativeLayout>

@@ -27,6 +27,8 @@ public class RecipeRepository implements RequestCancelListener{
 
     private RecipeApi mRecipeApi;
     private RecipeListCallback mRecipeListCallback;
+    private String mQuery;
+    private int mPageNumber;
 
     //Calls
     private Call<RecipeSearchResponse> mRecipeSearchCall = null;
@@ -43,8 +45,14 @@ public class RecipeRepository implements RequestCancelListener{
         return instance;
     }
 
+    public void searchNextPage(){
+        searchApi(mQuery,mPageNumber+1);
+    }
+
     public RecipeRepository(RecipeApi recipeApi){
         mRecipeApi = recipeApi;
+        mQuery = "";
+        mPageNumber = 0;
     }
 
     public void setRecipeListCallback(RecipeListCallback callback){
@@ -52,8 +60,10 @@ public class RecipeRepository implements RequestCancelListener{
     }
 
     public void searchApi(String query, int pageNumber){
+        mQuery = query;
+        mPageNumber = pageNumber;
         mRecipeListCallback.onQueryStart();
-        mRecipeSearchCall = mRecipeApi.searchRecipe(Constants.API_KEY,query,String.valueOf(pageNumber));
+        mRecipeSearchCall = mRecipeApi.searchRecipe(Constants.API_KEY,query,String.valueOf(mPageNumber));
         mRecipeSearchCall.enqueue(recipeListSearchCallback);
     }
 
@@ -61,18 +71,21 @@ public class RecipeRepository implements RequestCancelListener{
         @Override
         public void onResponse(Call<RecipeSearchResponse> call, Response<RecipeSearchResponse> response) {
             if(response.code() == 200){
-                Log.d(COMMON_TAG,TAG+" onResponse: "+response.body().toString());
                 List<Recipe> recipes = new ArrayList<>(response.body().getRecipes());
-                mRecipeListCallback.setRecipes(recipes);
-                for(Recipe recipe : recipes){
-                    Log.d(COMMON_TAG,TAG+" onResponse: "+recipe.toString());
-                }
-            }else{
-                try {
-                    Log.d(COMMON_TAG,TAG+" response: "+response.errorBody().string());
-                } catch (IOException e) {
+                Log.d(COMMON_TAG,TAG+" onResponse: "+response.body().toString());
+
+                //set results to mRecipes list
+                try{
+                    if(mPageNumber == 0){
+                        mRecipeListCallback.setRecipes(recipes);
+                    }else{
+                        mRecipeListCallback.appendRecipes(recipes);
+                    }
+                }catch (NullPointerException e){
                     e.printStackTrace();
                 }
+            }else{
+                Log.d(COMMON_TAG,TAG+" Error occured");
             }
             mRecipeListCallback.onQueryDone();
         }
@@ -92,4 +105,5 @@ public class RecipeRepository implements RequestCancelListener{
             mRecipeSearchCall = null;
         }
     }
+
 }

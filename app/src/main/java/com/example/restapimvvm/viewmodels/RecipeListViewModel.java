@@ -26,6 +26,11 @@ public class RecipeListViewModel extends AndroidViewModel implements RecipeListC
         mRecipeRepository.setRecipeListCallback(this);
     }
 
+    public void searchNextPage(){
+        if(!mIsPerformingQuery && isIsViewingRecipes()){
+            mRecipeRepository.searchNextPage();
+        }
+    }
 
     public void cancelQuery(){
         mRecipeRepository.onCancel();
@@ -39,6 +44,15 @@ public class RecipeListViewModel extends AndroidViewModel implements RecipeListC
     @Override
     public void onQueryDone() {
         mIsPerformingQuery = false;
+    }
+
+    @Override
+    public void appendRecipes(List<Recipe> recipes) {
+        List<Recipe> currentRecipes = mRecipes.getValue();
+        if (currentRecipes != null) {
+            currentRecipes.addAll(recipes);
+        }
+        mRecipes.setValue(currentRecipes);
     }
 
 

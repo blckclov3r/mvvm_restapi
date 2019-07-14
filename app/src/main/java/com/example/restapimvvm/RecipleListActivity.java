@@ -1,5 +1,6 @@
 package com.example.restapimvvm;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
@@ -7,6 +8,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -67,6 +69,16 @@ public class RecipleListActivity extends BaseActivity implements RecipeRecyclerA
         mAdapter = new RecipeRecyclerAdapter(this);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(mAdapter);
+
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if(!mRecyclerView.canScrollVertically(1) && mRecipeListViewModel.isIsViewingRecipes()){
+                       mRecipeListViewModel.searchNextPage();
+                }
+            }
+        });
     }
 
     private void subscribeObservers() {
@@ -87,6 +99,7 @@ public class RecipleListActivity extends BaseActivity implements RecipeRecyclerA
                 Log.d(COMMON_TAG, TAG + " onQueryTextSubmit: " + query);
                 mRecipeListViewModel.setIsViewingRecipes(true);
                 mRecipeListViewModel.search(query, 0);
+                mRecyclerView.clearFocus();
                 return false;
             }
 
@@ -100,6 +113,9 @@ public class RecipleListActivity extends BaseActivity implements RecipeRecyclerA
     @Override
     public void onRecipeClick(int position) {
         Log.d(COMMON_TAG, TAG + " click: " + position);
+        Intent intent = new Intent(RecipleListActivity.this,RecipeActivity.class);
+        intent.putExtra("recipe",mAdapter.getSelectedRecipe(position));
+        startActivity(intent);
     }
 
     @Override
