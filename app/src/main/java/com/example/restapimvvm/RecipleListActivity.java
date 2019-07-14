@@ -1,6 +1,7 @@
 package com.example.restapimvvm;
 
 import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -8,6 +9,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import com.example.restapimvvm.adapters.RecipeRecyclerAdapter;
 import com.example.restapimvvm.models.Recipe;
@@ -40,6 +44,23 @@ public class RecipleListActivity extends BaseActivity implements RecipeRecyclerA
         initSearchView();
         mRecipeListViewModel.displaySearchCategories();
 
+        setSupportActionBar((Toolbar)findViewById(R.id.toolBar));
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.recipe_search_menu,menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.action_categories){
+            mRecipeListViewModel.displaySearchCategories();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void initRecyclerView() {
